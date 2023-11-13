@@ -3,6 +3,7 @@ from selenium.common import exceptions
 from bs4 import BeautifulSoup
 import re
 import os
+from openpyxl import load_workbook
 from source.common import page_down
 
 
@@ -48,5 +49,29 @@ def talktalk(driver, my_influencer_id):
 # 따로 만든 파일에서 인플루언서 아이디 목록 가져오기
 # 지원 파일: txt, excel
 def read_file(file_path):
-    influencer_list = list()
-    return influencer_list
+    # default follow list file path: .follow_list.txt
+    if file_path == "":
+        file_path = "follow_list.txt"
+        msg = "-i 옵션으로 파일 경로를 지정하지 않으면 기본 'follow_list.txt' 파일을 참조합니다."
+        print(msg)
+
+    # txt
+    if file_path.endswith(".txt"):
+        with open(file_path, "r") as f:
+            influencer_list = f.readlines()
+        return influencer_list
+
+    # excel
+    if file_path.endswith(".xlsx"):
+        wb = load_workbook(file_path)
+        sheet_list = wb.sheetnames
+        ws = wb[sheet_list[0]]
+
+        excel_col = os.environ.get("INMN_EXCEL_COL")
+        if excel_col == "":
+            excel_col = "B"
+            msg = "--input-excel-col 옵션으로 엑셀의 특정 열을 지정하지 않으면 기본 엑셀 파일의 B열을 참조합니다."
+            print(msg)
+
+        influencer_list = [cell.value for cell in ws[excel_col]]
+        return influencer_list

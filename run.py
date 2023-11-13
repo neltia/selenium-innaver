@@ -22,7 +22,11 @@ def param_parsing():
         help='작업 수행 시 파일을 전달해야 하는 경우에 사용하는 옵션입니다.',
     )
     parser.add_argument(
-        '-p', '--max-page', default=0,
+        '-c', '--input-excel-col', type=str, default="",
+        help='작업 수행 시 엑셀 파일을 전달해야 하는 경우 중 특정 열을 지정하고 싶을 때 사용하는 옵션입니다.',
+    )
+    parser.add_argument(
+        '-p', '--max-page', default="0",
         help='작업 수행 시 목록을 조회할 때 조회할 목록을 늘릴 수 있는 옵션입니다.',
     )
     args = parser.parse_args()
@@ -30,10 +34,9 @@ def param_parsing():
 
 
 # +-- info log --+
-def info_msg(command):
+def info_msg():
     log_info = [
         ["inmn: innaver-manage"],
-        [f"command: <{command}>"],
         ["@neltia"],
         ["Last Modified: 23.11.12"]
     ]
@@ -60,10 +63,12 @@ if __name__ == '__main__':
     args = param_parsing()
     command = args.command
     max_page = args.max_page
+    input_excel_col = args.input_excel_col
 
-    table_info = info_msg(args)
+    table_info = info_msg()
     print(table_info)
 
+    os.environ['INMN_EXCEL_COL'] = input_excel_col
     os.environ['INMN_MAX_PAGE'] = max_page
     try:
         run(args)

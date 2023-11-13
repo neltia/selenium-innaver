@@ -3,3 +3,7 @@ __pycache__
 
 # env
 .env
+
+# my test file
+follow_list.txt
+follow_list.xlsx
