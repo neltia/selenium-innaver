@@ -50,13 +50,17 @@ def influencer_follow(driver, influencer_list):
         driver.get(page)
         time.sleep(1)
 
-        print(idx, influencer_id)
         verify = verfication.is_followed(driver)
-        print(f"신규 팬하기 설정 대상: {verify}")
-
         # - 잘못된 질의 혹은 이미 팬하기가 되어있는 경우
-        if verify == -1 or not verify:
+        if verify == -1:
+            print(f"{idx} {influencer_id}: 유효하지 않은 인플루언서 아이디")
             continue
+        if verify == -1:
+            print(f"{idx} {influencer_id}: 이미 팬")
+            continue
+
+        msg = f"신규: {verify}"
+        print(idx, influencer_id, msg)
 
         time.sleep(1)
         try:
@@ -66,11 +70,9 @@ def influencer_follow(driver, influencer_list):
 
             disable_elem = driver.find_element(By.CLASS_NAME, alert_div_class)
             disable_elem.click()
-            print("알림 취소 설정 완료")
-
             close_elem = driver.find_element(By.CLASS_NAME, close_btn_class)
             close_elem.click()
-            print("창 닫기 완료")
+            print("알림 취소 설정 완료")
         except exceptions.NoSuchElementException:
             print("네이버의 인플루언서 홈 정보가 변경되었습니다. 프로그램 버전 업데이트가 필요합니다.")
             continue

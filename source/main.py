@@ -14,10 +14,6 @@ def main(args, user_id, user_pw, my_influencer_id):
     # follow-file: txt, excel 등 파일에 적힌 리스트를 기반으로 팬하기 리스트 생성
     if command == "follow-file":
         input_file = args.input_file
-        if input_file == "":
-            msg = "파일 기반 팔로우 자동화의 경우, -i 옵션을 사용해 해당 파일 경로를 지정해주세요."
-            print(msg)
-            return
         influencer_list = get_follow_list.read_file(input_file)
     # follow-talk: 네이버 톡톡에 온 톡톡 목록을 기반으로 팬하기 리스트 생성
     elif command == "follow-talk":
