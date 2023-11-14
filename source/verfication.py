@@ -21,7 +21,11 @@ def is_followed(driver):
         print(msg)
         return -1
 
-    home_text = home_div_elem.text
+    try:
+        home_text = home_div_elem.text
+    except AttributeError:
+        return -1
+
     if "팬하기" in home_text:
         return True
     else:

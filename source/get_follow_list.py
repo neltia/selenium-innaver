@@ -3,8 +3,10 @@ from selenium.common import exceptions
 from bs4 import BeautifulSoup
 import re
 import os
+import time
 from openpyxl import load_workbook
 from source.common import page_down
+from source import verfication
 
 
 # 네이버 톡톡에서 안 읽음으로 처리된 목록 가져오기
@@ -14,16 +16,17 @@ def talktalk(driver, my_influencer_id):
 
     talktalk_page = f"https://in.naver.com/{my_influencer_id}/talktalkList"
     driver.get(talktalk_page)
+    time.sleep(1)
 
-    # 안 읽음 처리된 톡톡 탭 메뉴 선택
-    unread_btn_xpath = "/html/body/div/div[1]/div/div[2]/div[2]/div[1]/button[2]"
-    try:
-        unread_btn_xpath = driver.find_element(By.XPATH, unread_btn_xpath)
-    except exceptions.NoSuchElementException:
-        msg = "본인의 인플루언서 아이디를 입력해주세요. 접근 권한이 없습니다."
-        print(msg)
+    # 전체 톡톡 탭 메뉴 선택
+    read_xpath = "/html/body/div/div[1]/div/div[2]/div[2]/div[1]/button[1]"
+    stat, read_element = verfication.find_element(driver, By.XPATH, read_xpath)
+    if stat == -1:
+        print(f"{my_influencer_id}: 본인의 인플루언서 아이디를 입력해주세요. 접근 권한이 없습니다.")
         return influencer_list
+    read_element.click()
 
+    # max_page만큼 PageDOWN 실행
     max_page = os.environ.get("INMN_MAX_PAGE")
     page_down(driver, max_page)
 
