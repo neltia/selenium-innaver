@@ -37,8 +37,8 @@ def cookiedump(driver, login_url):
 
 # 네이버: 로그인 함수
 def login(driver, user_id, user_pw):
-    use_login_cookie = bool(os.getenv("INMN_LOGIN_COOKIE"))
-    if use_login_cookie and check_saved_session(driver):
+    use_login_cookie = os.getenv("INMN_LOGIN_COOKIE")
+    if use_login_cookie == "True" and check_saved_session(driver):
         return
 
     # 1. 네이버 이동
