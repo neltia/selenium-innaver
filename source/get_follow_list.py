@@ -42,7 +42,7 @@ def talktalk(driver, my_influencer_id):
         talktalk = talktalk_list[idx+1].text
         talktalk_data += f"{talktalk}\n"
 
-    pat = r"(?:https:\/\/in\.naver\.com\/)(\w+)"
+    pat = r"(?:https:\/\/in\.naver\.com\/)(\S+)"
     influencer_id_pat = re.compile(pat, re.MULTILINE)
     influencer_list = influencer_id_pat.findall(talktalk_data)
 
