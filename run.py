@@ -15,6 +15,7 @@ def param_parsing():
     )
     parser.add_argument(
         'command', type=str,
+        choices=["follow-file", "follow-talk"],
         help='지정된 명렁어 중 하나를 입력해 작업을 수행합니다.'
     )
     parser.add_argument(
@@ -38,7 +39,7 @@ def info_msg():
     log_info = [
         ["inmn: innaver-manage"],
         ["@neltia"],
-        ["Last Modified: 23.11.12"]
+        ["Last Version: 23.11.14"]
     ]
     table_info = tabulate(log_info, tablefmt="psql")
     return table_info
