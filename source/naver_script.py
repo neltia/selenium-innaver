@@ -1,7 +1,9 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common import exceptions
+import os
 import time
+from source.common import page_down
 from source import verfication
 
 
@@ -46,3 +48,41 @@ def influencer_follow(driver, influencer_list):
         except exceptions.NoSuchElementException:
             print("네이버의 인플루언서 홈 정보가 변경되었습니다. 프로그램 버전 업데이트가 필요합니다.")
             continue
+
+
+# 네이버: 네이버 톡톡 읽음 처리
+def talk_noti(driver, my_influencer_id):
+    talktalk_url = f"https://in.naver.com/{my_influencer_id}/talktalkList"
+    driver.get(talktalk_url)
+    time.sleep(1)
+
+    # 안읽음 탭 선택
+    unread_xpath = "/html/body/div/div[1]/div/div[2]/div[2]/div[1]/button[2]"
+    stat, unread_element = verfication.find_element(driver, By.XPATH, unread_xpath)
+    if stat == -1:
+        print(f"{my_influencer_id}: 본인의 인플루언서 아이디를 입력해주세요. 접근 권한이 없습니다.")
+        return
+    unread_element.click()
+
+    # max_page만큼 PageDOWN 실행
+    max_page = os.environ.get("INMN_MAX_PAGE")
+    page_down(driver, max_page)
+
+    # 안 읽은 톡톡 목록을 가져와서, 개별 톡톡 클릭 후 돌아가기
+    link_class_name = "TalkTalkList__ell___anpyL"
+    talktalk_list = driver.find_elements(By.CLASS_NAME, link_class_name)
+    if len(talktalk_list):
+        msg = "안 읽은 톡톡 메시지가 없습니다."
+        print(msg)
+        return
+
+    for talk in talktalk_list:
+        try:
+            time.sleep(1)
+            talk.click()
+            driver.back()
+        except exceptions.StaleElementReferenceException:
+            time.sleep(1)
+            continue
+
+    return

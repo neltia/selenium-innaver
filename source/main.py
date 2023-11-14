@@ -24,4 +24,9 @@ def main(args, user_id, user_pw, my_influencer_id):
     if command.startswith("follow"):
         naver_script.influencer_follow(driver, influencer_list)
 
+    """ 네이버 인플루언서 팬하기 """
+    # read-talk: 네이버 톡톡 목록의 '안 읽음' 항목을 자동 읽음 처리함
+    if command == "read-talk":
+        influencer_list = naver_script.talk_noti(driver, my_influencer_id)
+
     return
