@@ -10,6 +10,8 @@ def get_driver():
     options = Options()
     user_agent = "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Whale/3.23.214.10 Safari/537.36"
     options.add_argument(user_agent)
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-gpu")
 
     # 드라이버 시작
     driver = webdriver.Chrome(
