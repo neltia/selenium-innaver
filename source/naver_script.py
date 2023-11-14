@@ -1,41 +1,11 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common import exceptions
-import pyperclip
 import time
 from source import verfication
 
 
-# 네이버 로그인 함수
-def login(driver, user_id, user_pw):
-    # 1. 네이버 이동
-    driver.get('https://naver.com')
-
-    # 2. 로그인 버튼 클릭
-    btn_class_name = 'MyView-module__link_login___HpHMW'
-    elem = driver.find_element(By.CLASS_NAME, btn_class_name)
-    elem.click()
-
-    # 3. id 입력
-    elem_id = driver.find_element(By.ID, 'id')
-    elem_id.click()
-    pyperclip.copy(user_id)
-    elem_id.send_keys(Keys.CONTROL, 'v')
-    time.sleep(1)
-
-    # 4. pw 복사 붙여넣기
-    elem_pw = driver.find_element(By.ID, 'pw')
-    elem_pw.click()
-    pyperclip.copy(user_pw)
-    elem_pw.send_keys(Keys.CONTROL, 'v')
-    time.sleep(1)
-
-    # 5. 로그인 버튼 클릭
-    driver.find_element(By.ID, 'log.login').click()
-    time.sleep(3)
-
-
-# 팬하기 자동화 수행
+# 네이버 인플루언서: 팬하기 자동화 수행
 def influencer_follow(driver, influencer_list):
     follow_btn_class = "hm-component-homeCover-profile-btn"
     alert_div_class = "FanPopup__label_notice___iPdOs"

@@ -30,6 +30,10 @@ def param_parsing():
         '-p', '--max-page', default="0",
         help='작업 수행 시 목록을 조회할 때 조회할 목록을 늘릴 수 있는 옵션입니다.',
     )
+    parser.add_argument(
+        '--login-cookie', action="store_true",
+        help='해당 옵션 사용 시 로그인 작업을 최초 1회 수행 시 다음부터는 해당 로그인 정보를 기억하도록 합니다.',
+    )
     args = parser.parse_args()
     return args
 
@@ -65,12 +69,15 @@ if __name__ == '__main__':
     command = args.command
     max_page = args.max_page
     input_excel_col = args.input_excel_col
+    login_cookie = args.login_cookie
 
     table_info = info_msg()
     print(table_info)
 
     os.environ['INMN_EXCEL_COL'] = input_excel_col
     os.environ['INMN_MAX_PAGE'] = max_page
+    os.environ['INMN_LOGIN_COOKIE'] = str(login_cookie)
+
     try:
         run(args)
     except exceptions.NoSuchWindowException:
