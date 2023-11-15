@@ -5,11 +5,11 @@ import re
 import os
 import time
 from openpyxl import load_workbook
-from source.common import page_down
+from source.common import page_down, find_unread_element
 from source import verfication
 
 
-# 네이버 톡톡에서 안 읽음으로 처리된 목록 가져오기
+# 네이버 톡톡 목록 가져오기
 # 네이버 톡톡 리스트에서 각 "https://in.naver.com" 링크 파싱
 def talktalk(driver, my_influencer_id):
     influencer_list = list()
@@ -18,13 +18,11 @@ def talktalk(driver, my_influencer_id):
     driver.get(talktalk_page)
     time.sleep(1)
 
-    # 전체 톡톡 탭 메뉴 선택
-    read_xpath = "/html/body/div/div[1]/div/div[2]/div[2]/div[1]/button[1]"
-    stat, read_element = verfication.find_element(driver, By.XPATH, read_xpath)
+    # 접근 권한 확인: 전체/안읽은 탭 메뉴가 있는지 확인
+    stat, _ = find_unread_element(driver)
     if stat == -1:
         print(f"{my_influencer_id}: 본인의 인플루언서 아이디를 입력해주세요. 접근 권한이 없습니다.")
         return influencer_list
-    read_element.click()
 
     # max_page만큼 PageDOWN 실행
     max_page = os.environ.get("INMN_MAX_PAGE")
