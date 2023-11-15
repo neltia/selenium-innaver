@@ -3,7 +3,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common import exceptions
 import os
 import time
-from source.common import page_down
+from source.common import page_down, find_unread_element
 from source import verfication
 
 
@@ -57,8 +57,7 @@ def talk_noti(driver, my_influencer_id):
     time.sleep(1)
 
     # 안읽음 탭 선택
-    unread_xpath = "/html/body/div/div[1]/div/div[2]/div[2]/div[1]/button[2]"
-    stat, unread_element = verfication.find_element(driver, By.XPATH, unread_xpath)
+    stat, unread_element = find_unread_element(driver)
     if stat == -1:
         print(f"{my_influencer_id}: 본인의 인플루언서 아이디를 입력해주세요. 접근 권한이 없습니다.")
         return
@@ -68,21 +67,26 @@ def talk_noti(driver, my_influencer_id):
     max_page = os.environ.get("INMN_MAX_PAGE")
     page_down(driver, max_page)
 
-    # 안 읽은 톡톡 목록을 가져와서, 개별 톡톡 클릭 후 돌아가기
+    # 안 읽은 톡톡 목록을 가져옴
     link_class_name = "TalkTalkList__ell___anpyL"
     talktalk_list = driver.find_elements(By.CLASS_NAME, link_class_name)
-    if len(talktalk_list):
+    if len(talktalk_list) == 0:
         msg = "안 읽은 톡톡 메시지가 없습니다."
         print(msg)
         return
 
-    for talk in talktalk_list:
+    # 개별 톡톡 클릭 후 돌아가기
+    for _ in range(len(talktalk_list)):
+        talk = driver.find_element(By.CLASS_NAME, link_class_name)
         try:
-            time.sleep(1)
             talk.click()
-            driver.back()
-        except exceptions.StaleElementReferenceException:
-            time.sleep(1)
-            continue
+        except AttributeError:
+            break
+        driver.back()
+        time.sleep(1)
+
+        stat, unread_element = find_unread_element(driver)
+        unread_element.click()
+        time.sleep(1)
 
     return
