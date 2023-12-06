@@ -9,7 +9,7 @@ from source import verfication
 
 # 네이버 인플루언서: 팬하기 자동화 수행
 def influencer_follow(driver, influencer_list):
-    follow_btn_class = "hm-component-homeCover-profile-btn"
+    btn_div_class = "hm-component-homeCover-profile-btn"
     alert_div_class = "FanPopup__label_notice___iPdOs"
     close_btn_class = "FanPopup__button_close___rBmXm"
 
@@ -36,7 +36,8 @@ def influencer_follow(driver, influencer_list):
 
         time.sleep(1)
         try:
-            follow_elem = driver.find_element(By.CLASS_NAME, follow_btn_class)
+            follow_dim = driver.find_element(By.CLASS_NAME, btn_div_class)
+            follow_elem = follow_dim.find_element(By.TAG_NAME, "button")
             follow_elem.click()
             print("팬하기 완료")
 
