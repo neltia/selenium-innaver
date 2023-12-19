@@ -19,10 +19,12 @@ def talktalk(driver, my_influencer_id):
     time.sleep(1)
 
     # 접근 권한 확인: 전체/안읽은 탭 메뉴가 있는지 확인
-    stat, _ = find_unread_element(driver)
+    stat, unread_element = find_unread_element(driver)
     if stat == -1:
         print(f"{my_influencer_id}: 본인의 인플루언서 아이디를 입력해주세요. 접근 권한이 없습니다.")
         return influencer_list
+    # 톡톡 목록 중 '안 읽음' 목록만 가져와서 '팬하기'를 사용할 것인지 선택
+    # unread_element.click()
 
     # max_page만큼 PageDOWN 실행
     max_page = os.environ.get("INMN_MAX_PAGE")

@@ -27,7 +27,7 @@ def influencer_follow(driver, influencer_list):
         if verify == -1:
             print(f"{idx} {influencer_id}: 유효하지 않은 인플루언서 아이디")
             continue
-        if verify == -1:
+        if not verify:
             print(f"{idx} {influencer_id}: 이미 팬")
             continue
 
@@ -81,7 +81,7 @@ def talk_noti(driver, my_influencer_id):
         talk = driver.find_element(By.CLASS_NAME, link_class_name)
         try:
             talk.click()
-        except AttributeError:
+        except (AttributeError, exceptions.NoSuchElementException):
             break
         driver.back()
         time.sleep(1)
