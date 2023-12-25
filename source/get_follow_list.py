@@ -1,12 +1,9 @@
-from selenium.webdriver.common.by import By
-from selenium.common import exceptions
 from bs4 import BeautifulSoup
 import re
 import os
 import time
 from openpyxl import load_workbook
 from source.common import page_down, find_unread_element
-from source import verfication
 
 
 # 네이버 톡톡 목록 가져오기
@@ -73,7 +70,7 @@ def read_file(file_path):
         excel_col = os.environ.get("INMN_EXCEL_COL")
         if excel_col == "":
             excel_col = "B"
-            msg = "--input-excel-col 옵션으로 엑셀의 특정 열을 지정하지 않으면 기본 엑셀 파일의 B열을 참조합니다."
+            msg = "엑셀의 특정 열을 지정하지 않으면 기본 엑셀 파일의 B열을 참조합니다."
             print(msg)
 
         influencer_list = [cell.value for cell in ws[excel_col]]
