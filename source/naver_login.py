@@ -4,12 +4,34 @@ import pyperclip
 import time
 import json
 import os
+from datetime import datetime
+import glob
+
+
+# cookie file name get
+def get_cookie_filename():
+    today_date = datetime.today().strftime("%Y%m%d")
+    filename = f'cookie_{today_date}.json'
+    return filename
+
+
+# delete cookie file up to yesterday
+def delete_cookie_files():
+    source_path = os.path.dirname(os.path.abspath(__file__))
+    parent_path = os.path.dirname(source_path)
+    current_name = get_cookie_filename()
+    for filepath in glob.glob(f"{parent_path}\\*.json"):
+        if os.path.basename(filepath) == current_name:
+            continue
+        os.remove(filepath)
 
 
 # 이미 로그인된 세션이 있는지 확인
 def check_saved_session(driver):
+    delete_cookie_files()
+    filename = get_cookie_filename()
     try:
-        with open('cookie.json', 'r') as file:
+        with open(filename, 'r') as file:
             data = json.load(file)
             domain = data["url"]
             driver.get(domain)
@@ -31,7 +53,8 @@ def cookiedump(driver, login_url):
         cookie_dict[cookie['name']] = cookie['value']
 
     data = {'url': login_url, 'cookies': cookie_dict}
-    with open('cookie.json', 'w') as f:
+    filename = get_cookie_filename()
+    with open(filename, 'w') as f:
         json.dump(data, f, indent=2)
 
 
