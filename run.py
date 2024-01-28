@@ -15,7 +15,7 @@ def param_parsing():
     )
     parser.add_argument(
         'command', type=str,
-        choices=["follow-file", "follow-talk", "read-talk"],
+        choices=["follow-file", "follow-talk", "follow-follower", "read-talk"],
         help='지정된 명렁어 중 하나를 입력해 작업을 수행합니다.'
     )
     parser.add_argument(

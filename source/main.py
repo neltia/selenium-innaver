@@ -19,12 +19,13 @@ def main(args, user_id, user_pw, my_influencer_id):
     # follow-talk: 네이버 톡톡에 온 톡톡 목록을 기반으로 팬하기 리스트 생성
     elif command == "follow-talk":
         influencer_list = get_follow_list.talktalk(driver, my_influencer_id)
+    elif command == "follow-follower":
+        influencer_list = get_follow_list.follower(driver, my_influencer_id)
     # 파일 기반과 톡톡 기반 말고도 여러 기준이 있을 수 있음
     # 해당 내용을 포괄해 리스트에 있는 내용을 따라 팬하기 자동화 작업 수행
     if command.startswith("follow"):
         naver_script.influencer_follow(driver, influencer_list)
 
-    """ 네이버 인플루언서 팬하기 """
     # read-talk: 네이버 톡톡 목록의 '안 읽음' 항목을 자동 읽음 처리함
     if command == "read-talk":
         influencer_list = naver_script.talk_noti(driver, my_influencer_id)
