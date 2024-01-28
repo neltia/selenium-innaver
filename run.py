@@ -43,7 +43,7 @@ def info_msg():
     log_info = [
         ["inmn: innaver-manage"],
         ["@neltia"],
-        ["Last Version: 23.11.14"]
+        ["Last Version: 24.01.28"]
     ]
     table_info = tabulate(log_info, tablefmt="psql")
     return table_info
