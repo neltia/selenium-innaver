@@ -7,6 +7,7 @@ import time
 from openpyxl import load_workbook
 from source.common import page_down, find_unread_element
 from source import verfication
+from source import naver_script
 import random
 
 
@@ -123,8 +124,7 @@ def follower(driver, my_influencer_id):
     nickname_class = "MySubscriptionItem__nickname___x0Lhn"
     follower_nicknames = [elem.text for elem in driver.find_elements(By.CLASS_NAME, nickname_class)]
     for follower_nickname in follower_nicknames:
-        # print(f"nickname: {follower_nickname}")
-
+        # 인플루언서 아이디 추출
         span_text_find = f"//span[contains(text(), '{follower_nickname}')]"
         stat, follower_info_element = verfication.find_element(driver, By.XPATH, span_text_find)
         if stat == -1:
@@ -136,7 +136,13 @@ def follower(driver, my_influencer_id):
         time.sleep(0.5)
         influencer_id = driver.current_url.split("/")[-1]
         influencer_list.append(influencer_id)
-        # print(f"influencer_id: {influencer_id}")
+
+        # 헤당 인플루언서 팬하기 수행
+        naver_script.influencer_follow_one(driver, influencer_id)
+
+        # 톡톡 메시지는 팬하기를 한 인플루언서에게만 전송 가능
+        naver_script.send_talk(driver)
+        driver.back()
 
         driver.back()
         time.sleep(1)

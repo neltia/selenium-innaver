@@ -10,3 +10,6 @@ follow_list.xlsx
 
 # cookie file
 cookie_*.json
+
+# personal talktalk msg
+talktalk_msg.txt

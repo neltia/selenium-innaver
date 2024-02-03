@@ -7,48 +7,58 @@ from source.common import page_down, find_unread_element
 from source import verfication
 
 
-# 네이버 인플루언서: 팬하기 자동화 수행
+# <List> 네이버 인플루언서: 팬하기 자동화 수행
 def influencer_follow(driver, influencer_list):
+    for idx, influencer_id in enumerate(influencer_list):
+        idx += 1
+        print(f"{idx}. start")
+
+        if influencer_id.startswith("https://in.naver.com/"):
+            influencer_id = influencer_id.split("/")[-1]
+
+        res_code = influencer_follow_one(driver, influencer_id)
+        if res_code == -1:
+            continue
+
+
+# 네이버 인플루언서: 팬하기 자동화 수행
+def influencer_follow_one(driver, influencer_id):
     btn_div_class = "hm-component-homeCover-profile-btn"
     alert_div_class = "FanPopup__label_notice___iPdOs"
     close_btn_class = "FanPopup__button_close___rBmXm"
 
-    for idx, influencer_id in enumerate(influencer_list):
-        idx += 1
-        if influencer_id.startswith("https://in.naver.com/"):
-            influencer_id = influencer_id.split("/")[-1]
+    page = f"https://in.naver.com/{influencer_id}"
+    driver.get(page)
+    time.sleep(1)
 
-        page = f"https://in.naver.com/{influencer_id}"
-        driver.get(page)
-        time.sleep(1)
+    verify = verfication.is_followed(driver)
+    # - 잘못된 질의 혹은 이미 팬하기가 되어있는 경우
+    if verify == -1:
+        print(f"{influencer_id}: 유효하지 않은 인플루언서 아이디")
+        return -1
+    if not verify:
+        print(f"{influencer_id}: 이미 팬")
+        return -1
 
-        verify = verfication.is_followed(driver)
-        # - 잘못된 질의 혹은 이미 팬하기가 되어있는 경우
-        if verify == -1:
-            print(f"{idx} {influencer_id}: 유효하지 않은 인플루언서 아이디")
-            continue
-        if not verify:
-            print(f"{idx} {influencer_id}: 이미 팬")
-            continue
+    msg = f"신규: {verify}"
+    print(influencer_id, msg)
 
-        msg = f"신규: {verify}"
-        print(idx, influencer_id, msg)
+    time.sleep(1)
+    try:
+        follow_dim = driver.find_element(By.CLASS_NAME, btn_div_class)
+        follow_elem = follow_dim.find_element(By.TAG_NAME, "button")
+        follow_elem.click()
+        print("팬하기 완료")
 
-        time.sleep(1)
-        try:
-            follow_dim = driver.find_element(By.CLASS_NAME, btn_div_class)
-            follow_elem = follow_dim.find_element(By.TAG_NAME, "button")
-            follow_elem.click()
-            print("팬하기 완료")
-
-            disable_elem = driver.find_element(By.CLASS_NAME, alert_div_class)
-            disable_elem.click()
-            close_elem = driver.find_element(By.CLASS_NAME, close_btn_class)
-            close_elem.click()
-            print("알림 취소 설정 완료")
-        except exceptions.NoSuchElementException:
-            print("네이버의 인플루언서 홈 정보가 변경되었습니다. 프로그램 버전 업데이트가 필요합니다.")
-            continue
+        disable_elem = driver.find_element(By.CLASS_NAME, alert_div_class)
+        disable_elem.click()
+        close_elem = driver.find_element(By.CLASS_NAME, close_btn_class)
+        close_elem.click()
+        print("알림 취소 설정 완료")
+        return 0
+    except exceptions.NoSuchElementException:
+        print("네이버의 인플루언서 홈 정보가 변경되었습니다. 프로그램 버전 업데이트가 필요합니다.")
+        return -1
 
 
 # 네이버: 네이버 톡톡 읽음 처리
@@ -91,3 +101,31 @@ def talk_noti(driver, my_influencer_id):
         time.sleep(1)
 
     return
+
+
+# 네이버: 톡톡 메시지 보내기
+def send_talk(driver):
+    btn_class = "hm-component-homeCover-profile-btn"
+    btn_box = driver.find_element(By.CLASS_NAME, btn_class)
+
+    # 톡톡 메시지를 허용하지 않은 인플루언서도 있음
+    try:
+        talk_btn = btn_box.find_elements(By.TAG_NAME, "button")[1]
+    except (exceptions.ElementNotInteractableException, KeyError):
+        print("맞팬 요청 톡톡 메시지 전송 실패")
+        return -1
+
+    talk_btn.click()
+    time.sleep(3)
+
+    with open("talktalk_msg.txt", "r", encoding="utf-8") as f:
+        data = f.read()
+
+    chat_input_class = "chat_input"
+    chat_input = driver.find_element(By.CLASS_NAME, chat_input_class)
+    chat_input.send_keys(data)
+
+    time.sleep(1)
+    print("맞팬 요청 톡톡 메시지 전송 완료")
+
+    return 0
