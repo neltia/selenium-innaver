@@ -68,5 +68,13 @@ def get_driver_debug():
     # 2. chromedriver.exe 검색
     # 3. 파일 위치를 열어 해당 크롬 드라이버를 열어 네이버 로그인까지 선행
     # example path. C:\\Users\USERNAME\\.wdm\drivers\\chromedriver\win64\\122.0.6261.95\\chromedriver-win32\\chromedriver.exe
+
     driver_path = ""
+</pre>
+
+- 참고. cmd 열어 드라이버 실행
+
+<pre>
+    cd  C:\Program Files\Google\Chrome\Application
+    chrome.exe --remote-debugging-port=9222 --user-data-dir=
 </pre>
