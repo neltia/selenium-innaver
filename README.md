@@ -52,3 +52,21 @@ beautifulsoup4==4.11.2
 selenium==4.8.2
 openpyxl==3.1.2
 </pre>
+
+## 도움말
+<p>자동 쿠키 추출 기능을 사용하려면 로컬에 있는 크롬 드라이버 위치 값을 넣어야 함</p>
+
+- driver_settings.py: driver_path 값 변경
+
+<pre>
+def get_driver_debug():
+    options = Options()
+    options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
+
+    # driver abs path
+    # 1. 파일 탐색기 열기(Win + E)
+    # 2. chromedriver.exe 검색
+    # 3. 파일 위치를 열어 해당 크롬 드라이버를 열어 네이버 로그인까지 선행
+    # example path. C:\\Users\USERNAME\\.wdm\drivers\\chromedriver\win64\\122.0.6261.95\\chromedriver-win32\\chromedriver.exe
+    driver_path = ""
+</pre>

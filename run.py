@@ -5,6 +5,7 @@ from selenium.common import exceptions
 from tabulate import tabulate
 import os
 from source.main import main
+from get_cookie_file import save_today_cookie
 
 
 # python run.py <command> [opt1]
@@ -70,6 +71,10 @@ if __name__ == '__main__':
     max_page = args.max_page
     input_excel_col = args.input_excel_col
     login_cookie = args.login_cookie
+
+    if login_cookie:
+        # 현재 날짜 네이버 로그인 쿠키 파일 탐색
+        save_today_cookie()
 
     table_info = info_msg()
     print(table_info)
